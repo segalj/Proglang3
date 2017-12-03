@@ -1,3 +1,5 @@
+:- module(mazeSolver, [isValidMove/3, main/0]).
+
 :- use_module(mazeInfo, [info/3, wall/2, button/3, num_buttons/1, start/2, goal/2]).
 
 main :-
