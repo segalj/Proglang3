@@ -1,39 +1,39 @@
-article(the).
-article(it).
-article(a).
+article("the").
+article("it").
+article("a").
 
-subject(he).
-subject(rat).
-subject(einstein).
-subject(rodent).
-subject(a).
-subject(it).
+subject("he").
+subject("rat").
+subject("einstein").
+subject("rodent").
+subject("a").
+subject("it").
 
-verb(ran).
-verb(moved).
-verb(pushed).
-verb(scurried).
+verb("ran").
+verb("moved").
+verb("pushed").
+verb("scurried").
 
-object(squares).
-object(square).
-object(cells).
-object(cell).
-object(button).
+object("squares").
+object("square").
+object("cells").
+object("cell").
+object("button").
 
-numb(1).
-numb(2).
-numb(3).
-numb(4).
-numb(5).
-numb(6).
-numb(7).
-numb(8).
-numb(9).
+numb("1").
+numb("2").
+numb("3").
+numb("4").
+numb("5").
+numb("6").
+numb("7").
+numb("8").
+numb("9").
 
-direction(left).
-direction(right).
-direction(up).
-direction(down).
+direction("left").
+direction("right").
+direction("up").
+direction("down").
 
 isSubjectPhrase(X,Y):-
 	 write('is subject phrase'),nl,
@@ -65,7 +65,10 @@ isVerbPhrase(X,Y,Z,W):-
 isSentence([X,Y,A,B,C,D]):-
 	 write('is sentance/6'),
 	 nl,
+	 write(X),write(Y),nl,
     isSubjectPhrase(X,Y),
+	 write('was subject phrase'),
+	 nl,
     isVerbPhrase(A,B,C,D),
     write("Is Sentence"),
     nl.
@@ -120,16 +123,7 @@ writeToFile(Str):-
    %printlist(Words).
    %checkLines(Words).
 	nth0(0,Words,Sentance),
-	write('test'),
-	nl,
-	write(Sentance),
-	nl,
-	isSentence(Sentance),
-	write('true'),
-	nl,
-	isSentence(['the', 'dog', 'green', 'blue']),
-	write('false'),
-	nl.
+	isSentence(Sentance).
    
 
 
