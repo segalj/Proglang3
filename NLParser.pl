@@ -75,7 +75,16 @@ isSentence([X,A,B,C]):-
     write("Is Sentence"),
     nl.
 
-processWords(X,Y,[Sentence|Tail],LastButtonPressed) :-
+/*	Takes sentence as input, sets Direction to either
+	'up', 'down','left', or 'right'. Sets Distance to number of
+	squares to move */
+
+parseMove(Sentence, Direction, Distance):-nl.
+
+/* Return true if the move is valid, false otherwise */
+validMove(X,Y,Direction, Distance, LastButtonPressed, ButtonsPressed):-nl.
+
+processWords(X,Y,[Sentence|Tail],NumButtonsPressed,ButtonsPressed) :-
 	(isSentence(Sentence) -> write('IS SENTENCE'),nl; invalidSentence()),
 	processWords(X,Y,Tail,LastButtonPressed).
 

@@ -72,16 +72,23 @@ printCoordinates(X,Y) :-
 	nl(Stream),
 	close(Stream).
 
-tryMove(X, Y, OldX, OldY, LastButtonHit,MoveList) :-
-	isValidMove(X,Y,LastButtonHit),
+DoesNotContain(X,Y,[[A,B]|Tail):-
+	
+
+isNewButtonPress(X,Y,ButtonsPressed):-
+	button(X,Y),
+	doesNotContain(X,Y,ButtonsPressed).
+
+tryMove(X, Y, OldX, OldY, NumButtonsHit ,MoveList,ButtonsPressed) :-
+	isValidMove(X,Y,NumButtonsHit,ButtonsPressed),
 	Up is Y+1,
 	Down is Y-1,
 	Left is X-1,
 	Right is X+1,
 	append(MoveList, [[X,Y]], NewMoveList),
-	(isNotButton(X,Y) -> B is LastButtonHit; B is LastButtonHit + 1),
+	(isNotButton(X,Y) -> B is NumButtonsHit; B is NumButtonsHit + 1),
 	(
-		isValidSolution(X,Y,LastButtonHit,NewMoveList);
+		isValidSolution(X,Y,B,NewMoveList);
 		((\+(Up = OldY)), tryMove(X,Up,X,Y,B,NewMoveList));
 		((\+(Down = OldY)), tryMove(X,Down,X,Y,B,NewMoveList));
 		((\+(Left = OldX)), tryMove(Left,Y,X,Y,B,NewMoveList));
