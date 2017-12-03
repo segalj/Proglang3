@@ -88,6 +88,25 @@ isNewButtonPress(X,Y,ButtonsPressed):-
 copyList(Old, New):-
 	New = Old.
 
+/* Return true if the move is valid, false otherwise */
+validMove(X,Y,Direction, Distance, NumButtonsHit, ButtonsPressed):-
+	(Distance = 0);
+	(
+		(
+			(Direction = 'up', NewY is Y+1, NewX is X);
+			(Direction = 'down', NewY is Y-1, NewX is X);
+			(Direction = 'left', NewY is Y, NewX is X-1);
+			(Direction = 'right', NewY is Y, NewX is X+1);
+		),
+		isValidMove(NewX,NewY,NumButtonsHit),
+		(isNewButtonPress(X,Y,ButtonsPressed) -> 
+			(B is NumButtonsHit + 1, append(ButtonsPressed,[[X,Y]],NewButtonList));
+			(B is NumButtonsHit, copyList(ButtonsPressed, NewButtonList))
+		),
+		NewDist is Distance - 1,
+		validMove(NewX,NewY,Direction,NewDist,B,NewButtonList)
+	).
+
 tryMove(X, Y, OldX, OldY, NumButtonsHit ,MoveList,ButtonsPressed) :-
 	isValidMove(X,Y,NumButtonsHit),
 	Up is Y+1,
