@@ -54,22 +54,48 @@ isVerbPhrase(X,Y,Z):-
     isObjectPhrase(Y,Z).
 
 isVerbPhrase(X,Y,Z,W):-
-    verb(x),
+    verb(X),
     isDirectionObjectPhrase(Y,Z,W).
 
 isSentence(X,Y,A,B,C,D):-
     isSubjectPhrase(X,Y),
-    isVerbPhrase(A,B,C,D).
+    isVerbPhrase(A,B,C,D),
+    write("Is Sentence"),
+    nl.
 
 isSentence(X,Y,A,B,C):-
     (   isSubjectPhrase(X,Y),
-        isVerbPhrase(A,B,C));
+        isVerbPhrase(A,B,C),
+        write("Is Sentence"),
+        nl);
     (   subject(X),
-        isVerbPhrase(Y,A,B,C)).
+        isVerbPhrase(Y,A,B,C),
+        write("Is Sentence"),
+        nl).
 
 isSentence(X,A,B,C):-
     subject(X),
-    isVerbPhrase(A,B,C).
+    isVerbPhrase(A,B,C),
+    write("Is Sentence"),
+    nl.
+
+
+printlist([H|T]):-
+    write(H),
+    nl,
+    printlist(T).
+
+printlist([]).
+
+checkLines([H|T]):-
+    nth0(0,H,A),
+    nth0(1,H,B),
+    nth0(2,H,C),
+    nth0(3,H,D),
+    isSentence(A,B,C,D);
+    checkLines(T).
+
+checkLines([]).
 
 
  main :-
@@ -77,8 +103,9 @@ isSentence(X,A,B,C):-
     read_file(Str,Lines),
     %Convert the lines in file to an list of sentences that are lists of words
     lines_to_words(Lines, Words),
-    close(Str),
-    write(Words), nl.
+    %printlist(Words).
+    checkLines(Words).
+   
 
 
 % Credit to StackOverflow and author Ishq for file parser
