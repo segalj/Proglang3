@@ -1,4 +1,4 @@
-:- module(mazeSolver, [isValidMove/3, main/0]).
+:- module(mazeSolver, [isValidMove/3, main/0, validMove/6]).
 
 :- use_module(mazeInfo, [info/3, wall/2, button/3, num_buttons/1, start/2, goal/2]).
 
@@ -88,8 +88,7 @@ isNewButtonPress(X,Y,ButtonsPressed):-
 copyList(Old, New):-
 	New = Old.
 
-/* Return true if the move is valid, false otherwise */
-validMove(X,Y,Direction, Distance, NumButtonsHit, ButtonsPressed):-
+validTravelingMove(X,Y,Direction, Distance, NumButtonsHit, ButtonsPressed):-
 	(Distance = 0);
 	(
 		(
@@ -99,13 +98,17 @@ validMove(X,Y,Direction, Distance, NumButtonsHit, ButtonsPressed):-
 			(Direction = 'right', NewY is Y, NewX is X+1);
 		),
 		isValidMove(NewX,NewY,NumButtonsHit),
-		(isNewButtonPress(X,Y,ButtonsPressed) -> 
-			(B is NumButtonsHit + 1, append(ButtonsPressed,[[X,Y]],NewButtonList));
-			(B is NumButtonsHit, copyList(ButtonsPressed, NewButtonList))
-		),
 		NewDist is Distance - 1,
 		validMove(NewX,NewY,Direction,NewDist,B,NewButtonList)
 	).
+
+validButtonPressMove(X,Y,NumButtonsHit, ButtonsPressed):-nl.
+
+
+/* Return true if the move is valid, false otherwise */
+validMove(X,Y,Direction, Distance, NumButtonsHit, ButtonsPressed):-
+	(Direction = 'button', validButtonPressMove(X,Y,NumButtonsHit,ButtonsPressed));
+	(validTravelingMove(X,Y,Direction, Distance, NumButtonsHit, ButtonsPressed)).
 
 tryMove(X, Y, OldX, OldY, NumButtonsHit ,MoveList,ButtonsPressed) :-
 	isValidMove(X,Y,NumButtonsHit),

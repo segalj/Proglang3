@@ -77,16 +77,25 @@ isSentence([X,A,B,C]):-
 
 /*	Takes sentence as input, sets Direction to either
 	'up', 'down','left', or 'right'. Sets Distance to number of
-	squares to move */
+	squares to move, if the move is a button press, set
+	Direction to 'button' */
 
-parseMove(Sentence, Direction, Distance):-nl.
-
-/* Return true if the move is valid, false otherwise */
-validMove(X,Y,Direction, Distance, LastButtonPressed, ButtonsPressed):-nl.
+parseMove(Sentence, Direction, Distance):-
+    (    length(Sentence,6),
+        nth0(3,Sentence,Distance),
+        nth0(5,Sentence,Direction),
+        write(Direction),nl,
+        write(Distance),nl);
+    (   length(Sentence,5),
+        nth0(2,Sentence,Distance),
+        nth0(4,Sentence,Distance),
+        write(Direction),nl,
+        write(Distance),nl).
 
 processWords(X,Y,[Sentence|Tail],NumButtonsPressed,ButtonsPressed) :-
 	(isSentence(Sentence) -> write('IS SENTENCE'),nl; invalidSentence()),
-	processWords(X,Y,Tail,LastButtonPressed).
+    parseMove(Sentence,_,_),
+	processWords(X,Y,Tail,NumButtonsPressed, LastButtonPressed).
 
 
 invalidSentence():-
@@ -100,7 +109,7 @@ writeToFile(Str):-
 	
 
 
- main :-
+main :-
 	open('NL-input.txt', read, Str),
 	read_file(Str,Lines),
 	%Convert the lines in file to an list of sentences that are lists of words
