@@ -82,7 +82,7 @@ doesNotContain(X,Y,[[A,B]|Tail]):-
 doesNotContain(X,Y,[]).
 
 isNewButtonPress(X,Y,ButtonsPressed):-
-	button(X,Y,_).
+	button(X,Y,_),write('test'),nl,
 	%doesNotContain(X,Y,ButtonsPressed).
 
 tryMove(X, Y, OldX, OldY, NumButtonsHit ,MoveList,ButtonsPressed) :-
