@@ -48,7 +48,9 @@ isValidButtonPress(X,Y,Q) :-
 	info(_,_,Mode),
 	(
 		(Mode='a');
+		(Mode='b');
 		(
+			Mode='c'
 			Q2 is Q + 1,
 			(button(X,Y,Q2))
 		)

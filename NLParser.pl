@@ -36,9 +36,6 @@ direction("up").
 direction("down").
 
 isSubjectPhrase(X,Y):-
-	 write('is subject phrase'),nl,
-	 write(X),nl,
-	 write(Y),nl,
     article(X),
     subject(Y).
 
@@ -53,35 +50,24 @@ isDirectionObjectPhrase(X,Y,Z):-
     direction(Z).
 
 isVerbPhrase(X,Y,Z):-
-	 write('is verb phrase/3'),nl,
     verb(X),
     isObjectPhrase(Y,Z).
 
 isVerbPhrase(X,Y,Z,W):-
-	 write('is verb phrase/4'),nl,
     verb(X),
     isDirectionObjectPhrase(Y,Z,W).
 
 isSentence([X,Y,A,B,C,D]):-
-	 write('is sentance/6'),
-	 nl,
-	 write(X),write(Y),nl,
     isSubjectPhrase(X,Y),
-	 write('was subject phrase'),
-	 nl,
-    isVerbPhrase(A,B,C,D),
-    write("Is Sentence"),
-    nl.
+    isVerbPhrase(A,B,C,D).
 
 isSentence([X,Y,A,B,C]):-
     (   isSubjectPhrase(X,Y),
-        isVerbPhrase(A,B,C),
-        write("Is Sentence"),
-        nl);
+        isVerbPhrase(A,B,C)
+    );
     (   subject(X),
-        isVerbPhrase(Y,A,B,C),
-        write("Is Sentence"),
-        nl).
+        isVerbPhrase(Y,A,B,C)
+    ).
 
 isSentence([X,A,B,C]):-
     subject(X),
@@ -89,29 +75,19 @@ isSentence([X,A,B,C]):-
     write("Is Sentence"),
     nl.
 
+processWords(X,Y,[Sentence|Tail],LastButtonPressed) :-
+	(isSentence(Sentence) -> write('IS SENTENCE'),nl; invalidSentence()),
+	processWords(X,Y,Tail,LastButtonPressed).
 
-printlist([H|T]):-
-    write(H),
-    nl,
-    printlist(T).
 
-printlist([]).
-
-checkLines([H|T]):-
-    nth0(0,H,A),
-    nth0(1,H,B),
-    nth0(2,H,C),
-    nth0(3,H,D),
-    isSentence(A,B,C,D);
-    checkLines(T).
-
-%processWords(X,Y,Words,LastButtonPressed) :-
-	
-checkLines([]).
+invalidSentence():-
+	writeToFile('Not a valid sentence').
 
 writeToFile(Str):-
 	open('output.txt',append, Stream),
-	write(Stream, Str).
+	write(Stream, Str),
+	nl(Stream),
+	close(Stream).
 	
 
 
@@ -122,8 +98,7 @@ writeToFile(Str):-
    lines_to_words(Lines, Words),
    %printlist(Words).
    %checkLines(Words).
-	nth0(0,Words,Sentance),
-	isSentence(Sentance).
+	processWords(0,0,Words,0).
    
 
 
