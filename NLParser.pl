@@ -107,7 +107,7 @@ writeToFile(Str):-
    lines_to_words(Lines, Words),
    %printlist(Words).
    %checkLines(Words).
-	processWords(0,0,Words,0).
+	processWords(0,0,Words,0,[]).
    
 
 

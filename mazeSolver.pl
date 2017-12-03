@@ -4,7 +4,7 @@
 
 main :-
 	start(X,Y),
-	tryMove(X,Y,X,Y,0,[]),
+	tryMove(X,Y,X,Y,0,[],[]),
 	nl.
 
 isNotButton(X,Y) :- \+ button(X,Y,_).
@@ -72,27 +72,36 @@ printCoordinates(X,Y) :-
 	nl(Stream),
 	close(Stream).
 
-DoesNotContain(X,Y,[[A,B]|Tail):-
-	
+doesNotContain(X,Y,[[A,B]|Tail]):-
+	(
+		\+(X=A);
+		\+(Y=B)
+	),
+	doesNotContain(X,Y,Tail).
+
+doesNotContain(X,Y,[]).
 
 isNewButtonPress(X,Y,ButtonsPressed):-
-	button(X,Y),
-	doesNotContain(X,Y,ButtonsPressed).
+	button(X,Y,_).
+	%doesNotContain(X,Y,ButtonsPressed).
 
 tryMove(X, Y, OldX, OldY, NumButtonsHit ,MoveList,ButtonsPressed) :-
-	isValidMove(X,Y,NumButtonsHit,ButtonsPressed),
+	isValidMove(X,Y,NumButtonsHit),
 	Up is Y+1,
 	Down is Y-1,
 	Left is X-1,
 	Right is X+1,
 	append(MoveList, [[X,Y]], NewMoveList),
-	(isNotButton(X,Y) -> B is NumButtonsHit; B is NumButtonsHit + 1),
+	(isNewButtonPress(X,Y,ButtonsPressed) -> 
+		(B is NumButtonsHit + 1, append(ButtonsPressed,[[X,Y]],NewButtonList));
+		(B is NumButtonsHit, NewButtonList is ButtonsPressed)
+	),
 	(
 		isValidSolution(X,Y,B,NewMoveList);
-		((\+(Up = OldY)), tryMove(X,Up,X,Y,B,NewMoveList));
-		((\+(Down = OldY)), tryMove(X,Down,X,Y,B,NewMoveList));
-		((\+(Left = OldX)), tryMove(Left,Y,X,Y,B,NewMoveList));
-		((\+(Right = OldX)), tryMove(Right,Y,X,Y,B,NewMoveList))
+		((\+(Up = OldY)), tryMove(X,Up,X,Y,B,NewMoveList,NewButtonList));
+		((\+(Down = OldY)), tryMove(X,Down,X,Y,B,NewMoveList,NewButtonList));
+		((\+(Left = OldX)), tryMove(Left,Y,X,Y,B,NewMoveList,NewButtonList));
+		((\+(Right = OldX)), tryMove(Right,Y,X,Y,B,NewMoveList,NewButtonList))
 	).
 
 	
