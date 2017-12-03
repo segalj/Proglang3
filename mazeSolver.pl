@@ -50,7 +50,7 @@ isValidButtonPress(X,Y,Q) :-
 		(Mode='a');
 		(Mode='b');
 		(
-			Mode='c'
+			Mode='c',
 			Q2 is Q + 1,
 			(button(X,Y,Q2))
 		)
@@ -63,7 +63,7 @@ printList([[X,Y]|TAIL]) :-
 printList([]).
 
 printCoordinates(X,Y) :-
-	open('output.txt',append,Stream),
+	open('path-solution.txt',append,Stream),
 	write(Stream, '['),
 	write(Stream, X),
 	write(Stream, ','),
@@ -79,11 +79,14 @@ doesNotContain(X,Y,[[A,B]|Tail]):-
 	),
 	doesNotContain(X,Y,Tail).
 
-doesNotContain(X,Y,[]).
+doesNotContain(_,_,[]).
 
 isNewButtonPress(X,Y,ButtonsPressed):-
-	button(X,Y,_),write('test'),nl,
-	%doesNotContain(X,Y,ButtonsPressed).
+	button(X,Y,_),
+	doesNotContain(X,Y,ButtonsPressed).
+
+copyList(Old, New):-
+	New = Old.
 
 tryMove(X, Y, OldX, OldY, NumButtonsHit ,MoveList,ButtonsPressed) :-
 	isValidMove(X,Y,NumButtonsHit),
@@ -94,7 +97,7 @@ tryMove(X, Y, OldX, OldY, NumButtonsHit ,MoveList,ButtonsPressed) :-
 	append(MoveList, [[X,Y]], NewMoveList),
 	(isNewButtonPress(X,Y,ButtonsPressed) -> 
 		(B is NumButtonsHit + 1, append(ButtonsPressed,[[X,Y]],NewButtonList));
-		(B is NumButtonsHit, NewButtonList is ButtonsPressed)
+		(B is NumButtonsHit, copyList(ButtonsPressed, NewButtonList))
 	),
 	(
 		isValidSolution(X,Y,B,NewMoveList);
